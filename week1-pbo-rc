@@ -1,0 +1,57 @@
+import random
+
+class Robot:
+    def __init__(self, nama, hp, serangan, akurasi):
+        self.nama = nama
+        self.hp = hp
+        self.serangan = serangan
+        self.akurasi = akurasi
+    
+    def serangan_musuh(self, musuh):
+        if random.random() < self.akurasi:
+            musuh.hp -= self.serangan
+            print(f"{self.nama} menyerang {musuh.nama} dan mengurangi {self.serangan} HP!")
+        else:
+            print(f"{self.nama} meleset dalam menyerang {musuh.nama}!")
+    
+    def regen_health(self):
+        regen_amount = random.randint(10, 20)
+        self.hp += regen_amount
+        print(f"{self.nama} mendapatkan regenerasi sebesar {regen_amount} HP!")
+    
+    def is_alive(self):
+        return self.hp > 0
+
+class Permainan:
+    def __init__(self, robot1, robot2):
+        self.robot1 = robot1
+        self.robot2 = robot2
+        self.putaran = 0
+    
+    def mulai_pertarungan(self):
+        print("Pertarungan dimulai!")
+        while self.robot1.is_alive() and self.robot2.is_alive():
+            self.putaran += 1
+            print(f"Putaran {self.putaran}:")
+            self.robot1.serangan_musuh(self.robot2)
+            if not self.robot2.is_alive():
+                break
+            self.robot2.serangan_musuh(self.robot1)
+            self.robot1.regen_health()
+            self.robot2.regen_health()
+            print(f"HP {self.robot1.nama}: {self.robot1.hp}")
+            print(f"HP {self.robot2.nama}: {self.robot2.hp}")
+            print()
+        if self.robot1.is_alive():
+            print(f"{self.robot1.nama} memenangkan pertarungan!")
+        elif self.robot2.is_alive():
+            print(f"{self.robot2.nama} memenangkan pertarungan!")
+        else:
+            print("Pertarungan berakhir imbang!")
+
+robot1 = Robot("Robot A", 100, 20, 0.8)
+robot2 = Robot("Robot B", 100, 25, 0.7)
+
+
+permainan = Permainan(robot1, robot2)
+permainan.mulai_pertarungan()
